@@ -1,8 +1,34 @@
 #include <stdio.h>
 #include <ncurses.h>
 
-void draw(unsigned short int sprite[3][16], int x, int y, int color[8], int invert)
+/*
+create color:
+    short int mycolor = 29;
+    init_color(mycolor, 999, 440, 550);
+                         R    G    B
+*/
+
+int isInBounds(int coord, int maxCoord, int way)
 {
+    if (coord + way < 0)
+    {
+        return 0;
+    }
+    else if (coord + way > maxCoord)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+void draw(unsigned short int sprite[3][16], int x, int y, int mx, int my, int color[3], int invert)
+{
+    int xPixelCoord;
+    int yPixelCoord;
+
     for (int i = 0; i < 3; i++)
     {
         init_pair(i + 1, color[i], color[i]);
@@ -14,9 +40,19 @@ void draw(unsigned short int sprite[3][16], int x, int y, int color[8], int inve
             {
                 if (sprite[i][j] & (1 << k))
                 {
+                    yPixelCoord = x + (16 - k) * 2;
+                    xPixelCoord = y + j;
+                    if (!isInBounds(yPixelCoord - 1 + 8, my, 1))
+                    {
+                        yPixelCoord = 0 + j;
+                    }
+                    else if (!isInBounds(yPixelCoord + 1 + 8, my, -1))
+                    {
+                        yPixelCoord = my + j;
+                    }
                     if (invert)
                     {
-                        move(y + j, x + (16 - k) * 2);
+                        move(yPixelCoord, xPixelCoord);
                     }
                     else
                     {
@@ -37,6 +73,7 @@ int main()
     curs_set(0);
     start_color();
 
+    int mx, my;
     int x = 10;
     int y = 10;
     int reverse = 0;
@@ -51,57 +88,94 @@ int main()
 
     unsigned short int frame3[3][16] = {{1984, 16352, 0, 0, 0, 0, 0, 128, 768, 3456, 7936, 7184, 3616, 448, 0, 0}, {0, 0, 1248, 1104, 2256, 15408, 0, 1888, 3312, 112, 240, 96, 64, 3584, 8128, 960}, {0, 0, 2816, 15264, 30496, 960, 8128, 0, 0, 4608, 0, 896, 384, 0, 0, 0}};
 
-    draw(frame1, x, y, colors, reverse);
+    draw(frame1, x, y, mx, my, colors, reverse);
     while (foo)
     {
+        getmaxyx(stdscr, my, mx);
+        my -= 16;
+        mx -= 32;
         int key = getch();
         if (key == 'w')
         {
-            y--;
-            clear();
+            if (isInBounds(y, my, -1))
+            {
+                y--;
+            }
+            else
+            {
+                y = my;
+            }
         }
         if (key == 's')
         {
-            y++;
-            clear();
+            if (isInBounds(y, my, 1))
+            {
+                y++;
+            }
+            else
+            {
+                y = 0;
+            }
         }
         if (key == 'a')
         {
-            x--;
+            if (isInBounds(x, mx, -1))
+            {
+                x--;
+            }
+            else
+            {
+                x = mx;
+            }
             reverse = 1;
-            clear();
         }
         if (key == 'd')
         {
-            x++;
+            if (isInBounds(x, mx, 1))
+            {
+                x++;
+            }
+            else
+            {
+                x = 0;
+            }
             reverse = 0;
-            clear();
         }
 
+        clear();
         switch (state)
         {
         case 1:
         case 2:
         case 3:
-            draw(frame1, x, y, cc, reverse);
+            draw(frame1, x, y, mx, my, cc, reverse);
             break;
         case 4:
         case 5:
         case 6:
-            draw(frame2, x, y, colors, reverse);
+            draw(frame2, x, y, mx, my, colors, reverse);
             break;
         case 7:
         case 8:
         case 9:
-            draw(frame3, x, y, colors, reverse);
+            draw(frame3, x, y, mx, my, colors, reverse);
             break;
         }
-        state++;
+
+        if (x <= mx && x >= 0 && y <= my && y >= 0)
+        {
+            state++;
+        }
         if (state == 10)
         {
             state = 1;
         }
 
+        init_pair(14, COLOR_BLACK, COLOR_WHITE);
+        attron(COLOR_PAIR(14));
+        move(0, 0);
+        printw("%d/%d %d/%d", x, mx, y, my);
+        attroff(COLOR_PAIR(14));
         refresh();
     }
 
