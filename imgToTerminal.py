@@ -1,58 +1,29 @@
 from PIL import Image
 
 
-def getImageCodes(image_path):
-    image = Image.open(image_path)
-
-    colorValues = []
-    color1 = []
-    color2 = []
-    color3 = []
-
+def assign_color_values(path):
+    image = Image.open(path)
     width, height = image.size
+    color_values = {}
+    value = 0
+    formattedString = ""
 
-    i = 0
-    n1 = 0
-    n2 = 0
-    n3 = 0
-    first = True
+    output = "{"
     for y in range(height):
         for x in range(width):
+            pixel = image.getpixel((x, y))
+            if pixel not in color_values:
+                color_values[pixel] = value
+                value += 1
 
-            rgb = image.getpixel((x, y))
-            rgb = (rgb[0], rgb[1], rgb[2])
+            binary_value = format(color_values[pixel], "04b")
+            formattedString = binary_value + formattedString
+            if len(formattedString) == 64:
+                output += f"{int(formattedString, 2)},"
+                formattedString = ""
 
-            if rgb != (255,255,255) and rgb not in colorValues:
-                colorValues.append(rgb)
-
-            if i % 16 == 0:
-                i = 0
-                if first:
-                    first = False
-                else:
-                    color1.append(n1)
-                    color2.append(n2)
-                    color3.append(n3)
-                    n1 = 0
-                    n2 = 0
-                    n3 = 0
-            i += 1
-
-            try:
-                if rgb == colorValues[0]:
-                    n1 = n1 + (1 << i)
-                elif rgb == colorValues[1]:
-                    n2 = n2 + (1 << i)
-                elif rgb == colorValues[2]:
-                    n3 = n3 + (1 << i)
-            except IndexError:
-                pass
-
-    color1.append(n1)
-    color2.append(n2)
-    color3.append(n3)
-    output = str([color1, color2, color3]).replace("]", "}").replace("[", "{")
-    print(output)
+    output += "}"
+    print(output.replace(",}", "}"))
 
 
-getImageCodes("mario.png")
+assign_color_values(f"{input()}.png")
