@@ -16,7 +16,7 @@ def assign_color_values(path):
                 color_values[pixel] = value
                 value += 1
 
-            binary_value = format(color_values[pixel], "04b")
+            binary_value = format(color_values[pixel] + 5, "04b")
             formattedString = binary_value + formattedString
             if len(formattedString) == 64:
                 output += f"{int(formattedString, 2)},"

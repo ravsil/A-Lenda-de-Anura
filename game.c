@@ -10,8 +10,8 @@ int main()
     curs_set(0);
     start_color();
 
-    int x = 10;
-    int y = 10;
+    int x = 0;
+    int y = 0;
     int reverse = 0;
     int mainLoop = 1;
     int isNotMoving = 1;
@@ -24,13 +24,18 @@ int main()
     fread(&player, sizeof(PLAYER), 1, f);
     fclose(f);
 
+    fopen("bloco.dat", "rb");
+    SPRITE assets[1];
+    fread(assets, sizeof(assets), 1, f);
+
+    int world[7][14] = {{0}, {0}, {0}, {0}, {0}, {0}, {0}};
+
     while (mainLoop)
     {
-        drawPlayer(&player, x, y, reverse, isNotMoving);
+        drawWorld(world, assets);
+        drawPlayer(&player, x, y, reverse, !isNotMoving);
         refresh();
-        playerMove(key, &x, &y, &reverse, &isNotMoving);
-        clear();
-        refresh();
+        playerMove(&key, &x, &y, &reverse, &isNotMoving);
     }
 
     endwin();

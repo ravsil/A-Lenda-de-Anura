@@ -29,13 +29,13 @@ void drawSprite(SPRITE *sprite, int x, int y, int invert)
             attron(COLOR_PAIR(colorIndex));
             if (invert)
             {
-                move(y + i, x + 32 - j * 2);
+                move(y + i, x + 46 - j * 3);
             }
             else
             {
-                move(y + i, x + j * 2);
+                move(y + i, x + j * 3);
             }
-            printw("  ");
+            printw("   ");
             attroff(COLOR_PAIR(colorIndex));
         }
     }
@@ -44,4 +44,15 @@ void drawSprite(SPRITE *sprite, int x, int y, int invert)
 void drawPlayer(PLAYER *player, int x, int y, int invert, int animationFrame)
 {
     drawSprite(&player->sprites[animationFrame], x, y, invert);
+}
+
+void drawWorld(int world[7][14], SPRITE *assets)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        for (int j = 0; j < 14; j++)
+        {
+            drawSprite(&assets[world[i][j]], j * 16 * 3, i * 16, 0);
+        }
+    }
 }
