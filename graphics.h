@@ -74,26 +74,24 @@ void drawLetter(long long int character, int x, int y)
     attroff(COLOR_PAIR(20));
 }
 
-void drawText(long long int *characters, char *string, int size, int x, int y)
+void drawText(long long int *characters, char *string, int x, int y)
 {
     int index;
     int initialX = x;
-    int first = 1;
     for (int i = 0; string[i] != '\0'; i++)
     {
-        if (!first && i % size == 0)
+        if (string[i] == '\n')
         {
             y += 8;
             x = initialX;
+            continue;
         }
-
-        if (string[i] == ' ')
+        else if (string[i] == ' ')
         {
             x += 8 * 2;
             continue;
         }
-
-        if (string[i] >= 'a')
+        else if (string[i] >= 'a')
         {
             index = string[i] - 'a';
         }
@@ -104,10 +102,5 @@ void drawText(long long int *characters, char *string, int size, int x, int y)
 
         x += 16;
         drawLetter(characters[index], x, y);
-
-        if (first)
-        {
-            first = 0;
-        }
     }
 }

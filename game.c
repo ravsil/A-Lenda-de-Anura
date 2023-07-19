@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <ncurses.h>
-#include "logic.h"
 #include "graphics.h"
+#include "logic.h"
 
 int main()
 {
@@ -10,13 +10,14 @@ int main()
     curs_set(0);
     start_color();
 
+    int mainLoop = 1;
     int x = 0;
     int y = 0;
     int reverse = 0;
-    int mainLoop = 1;
     int isNotMoving = 1;
+    int isOnTitle = 1;
+    unsigned int selected = 0;
     int key;
-    int calls = 0;
     FILE *f;
 
     f = fopen("sapo.dat", "rb");
@@ -32,17 +33,17 @@ int main()
     int world[7][14] = {{0}, {0}, {0}, {0}, {0}, {0}, {0}};
 
     f = fopen("alfabeto.dat", "rb");
-    long long int characters[36];
+    long long int characters[37];
     fread(characters, sizeof(characters), 1, f);
     fclose(f);
 
-    drawText(characters, "jogo do sapo mago brabo", 30, 40 * 3, 10);
-    drawText(characters, "iniciar", 30, 80 * 3, 60);
-    drawText(characters, "creditos", 30, 80 * 3, 70);
-    drawText(characters, "controles", 30, 80 * 3, 80);
-    getch();
     while (mainLoop)
     {
+        titleScreen(characters, &key, &selected, &isOnTitle, &mainLoop);
+        if (isOnTitle)
+        {
+            continue;
+        }
         drawWorld(world, assets);
         drawPlayer(&player, x, y, reverse, !isNotMoving);
         refresh();
