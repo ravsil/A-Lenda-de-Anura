@@ -1,15 +1,5 @@
 #include <ncurses.h>
 
-typedef struct _SPRITE
-{
-    unsigned long long int lines[16];
-} SPRITE;
-
-typedef struct _PLAYER
-{
-    SPRITE sprites[2];
-} PLAYER;
-
 void drawSprite(SPRITE *sprite, int x, int y, int invert)
 {
     unsigned long long int seven = 7;
@@ -74,7 +64,7 @@ void drawLetter(long long int character, int x, int y)
     attroff(COLOR_PAIR(20));
 }
 
-void drawText(long long int *characters, char *string, int x, int y)
+void drawText(char *string, int x, int y)
 {
     int index;
     int initialX = x;

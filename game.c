@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ncurses.h>
+#include "variables.h"
 #include "graphics.h"
 #include "logic.h"
 
@@ -33,13 +34,12 @@ int main()
     int world[7][14] = {{0}, {0}, {0}, {0}, {0}, {0}, {0}};
 
     f = fopen("alfabeto.dat", "rb");
-    long long int characters[37];
     fread(characters, sizeof(characters), 1, f);
     fclose(f);
 
     while (mainLoop)
     {
-        titleScreen(characters, &key, &selected, &isOnTitle, &mainLoop);
+        titleScreen(&player, &key, &selected, &isOnTitle, &mainLoop);
         if (isOnTitle)
         {
             continue;
