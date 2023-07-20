@@ -8,6 +8,7 @@ typedef struct _PLAYER
     SPRITE sprites[2];
     char name[9];
     int life;
+    int maxLife;
     int attack;
     int defense;
     int mana;
@@ -24,4 +25,4 @@ typedef struct _ENEMY
     int defense;
 } ENEMY;
 
-long long int characters[38];
+long long int characters[39];

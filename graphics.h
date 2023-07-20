@@ -89,8 +89,27 @@ void drawText(char *string, int x, int y)
         {
             index = string[i] - '0' + 26;
         }
+        else if (string[i] == '/')
+        {
+            index = 38;
+        }
 
         x += 16;
         drawLetter(characters[index], x, y);
     }
+}
+
+void drawBox(int x0, int y0, int x, int y)
+{
+    init_pair(21, COLOR_BLACK, COLOR_BLACK);
+    attron(COLOR_PAIR(21));
+    for (int i = y0; i < y; i++)
+    {
+        for (int j = x0; j < x; j++)
+        {
+            move(y0 + i, x0 + j * 3);
+            printw("   ");
+        }
+    }
+    attroff(COLOR_PAIR(21));
 }

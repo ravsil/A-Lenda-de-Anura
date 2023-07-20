@@ -12,8 +12,6 @@ int main()
     start_color();
 
     int mainLoop = 1;
-    int x = 0;
-    int y = 0;
     int reverse = 0;
     int isNotMoving = 1;
     int isOnTitle = 1;
@@ -45,9 +43,11 @@ int main()
             continue;
         }
         drawWorld(world, assets);
-        drawPlayer(&player, x, y, reverse, !isNotMoving);
+
+        drawPlayer(&player, player.x, player.y, reverse, !isNotMoving);
+        // drawBox(10, 40, 210, 87);
         refresh();
-        playerMove(&key, &x, &y, &reverse, &isNotMoving);
+        playerMove(&key, &player.x, &player.y, &reverse, &isNotMoving, &isOnTitle, &player);
     }
 
     endwin();

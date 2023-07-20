@@ -1,7 +1,101 @@
 #include <ncurses.h>
 #include <time.h>
+#include <string.h>
 
-void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving)
+void status(PLAYER *player)
+{
+    clear();
+    char life[10];
+    char maxLife[10];
+    char attack[10];
+    char defense[10];
+    char mana[10];
+    char magic[10];
+
+    snprintf(life, 10, "%d", player->life);
+    snprintf(maxLife, 10, "%d", player->maxLife);
+    snprintf(attack, 10, "%d", player->attack);
+    snprintf(defense, 10, "%d", player->defense);
+    snprintf(mana, 10, "%d", player->mana);
+    snprintf(magic, 10, "%d", player->magic);
+    strcat(life, "/");
+    strcat(life, maxLife);
+
+    drawText(player->name, 40 * 3, 20);
+    drawText("vida", 40 * 3, 30);
+    drawText(life, 75 * 3, 30);
+    drawText("ataque", 40 * 3, 40);
+    drawText(attack, 80 * 3, 40);
+    drawText("defesa", 40 * 3, 50);
+    drawText(defense, 80 * 3, 50);
+    drawText("mana", 40 * 3, 60);
+    drawText(mana, 80 * 3, 60);
+    drawText("magia", 40 * 3, 70);
+    drawText(magic, 80 * 3, 70);
+    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 90);
+    getch();
+}
+
+void save(PLAYER *player)
+{
+    FILE *f;
+    f = fopen("playerData.dat", "wb");
+    fwrite(player, sizeof(PLAYER), 1, f);
+    fclose(f);
+    clear();
+    drawText("jogo salvo com sucesso", 50 * 3, 10);
+    getch();
+}
+
+void menu(int *isOnTitle, PLAYER *player)
+{
+    int isOnMenu = 1;
+    int key;
+    unsigned int selected = 0;
+
+    while (isOnMenu)
+    {
+        drawBox(100, 10, 150, 60);
+        drawText("status", 140 * 3, 25);
+        drawText("item", 140 * 3, 35);
+        drawText("salvar", 140 * 3, 45);
+        drawText("inicio", 140 * 3, 55);
+        drawLetter(characters[37], 138 * 3, 25 + (selected % 4 * 10));
+
+        key = getch();
+        switch (key)
+        {
+        case 'j':
+            if (selected % 4 == 0)
+            {
+                status(player);
+            }
+            else if (selected % 4 == 1)
+            {
+                // item();
+            }
+            else if (selected % 4 == 2)
+            {
+                save(player);
+            }
+            else
+            {
+                *isOnTitle = 1;
+            }
+        case 'k':
+            isOnMenu = 0;
+            break;
+        case 'w':
+            selected--;
+            break;
+        case 's':
+            selected++;
+            break;
+        }
+    }
+}
+
+void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER *player)
 {
     int turned = 0;
     if (*isNotMoving)
@@ -40,6 +134,9 @@ void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving)
             turned = 1;
         }
         break;
+    case 'k':
+        menu(isOnTitle, player);
+        break;
     default:
         if (*isNotMoving)
         {
@@ -47,7 +144,7 @@ void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving)
         }
     }
 
-    if (!turned)
+    if (!turned && *key != 'k')
     {
         *isNotMoving = !*isNotMoving;
     }
@@ -89,6 +186,7 @@ void nameScreen(PLAYER *player)
             else
             {
                 isOnName = 0;
+                break;
             }
             player->name[index] = letter;
             player->name[index + 1] = '\0';
@@ -114,8 +212,25 @@ void nameScreen(PLAYER *player)
     }
 }
 
-void loadGame(PLAYER *player, int *isOnTitle)
+void load(PLAYER *player, int *isOnTitle, int *isStarting)
 {
+    FILE *f;
+    f = fopen("playerData.dat", "rb");
+
+    if (f)
+    {
+        fread(player, sizeof(PLAYER), 1, f);
+        fclose(f);
+        *isOnTitle = 0;
+        *isStarting = 0;
+    }
+    else
+    {
+        clear();
+        drawText("nenhum salvamento encontrado", 35 * 3, 10);
+        drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80);
+        getch();
+    }
     return;
 }
 
@@ -144,13 +259,14 @@ void startingScreen(PLAYER *player, int *isOnTitle)
         case 'j':
             if (selected % 3 == 0)
             {
+                player->name[0] = '\0';
                 nameScreen(player);
                 *isOnTitle = 0;
                 isStarting = 0;
             }
             else if (selected % 3 == 1)
             {
-                loadGame(player, isOnTitle);
+                load(player, isOnTitle, &isStarting);
             }
             else
             {
