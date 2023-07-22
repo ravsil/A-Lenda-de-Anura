@@ -95,7 +95,43 @@ void menu(int *isOnTitle, PLAYER *player)
     }
 }
 
-void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER *player)
+int canMove(int world[7][14], int x, int y, int direction)
+{
+    switch (direction)
+    {
+    // >
+    case 1:
+        x++;
+        break;
+    // v
+    case 2:
+        y++;
+        break;
+    // <
+    case 3:
+        x--;
+        break;
+    // ^
+    case 4:
+        y--;
+        break;
+    }
+
+    if (x == 0 || y == 0 || x == 15 || y == 8)
+    {
+        return 0;
+    }
+    else if (world[y - 1][x - 1] < 10)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER *player, int world[7][14], int *mapX, int *mapY)
 {
     int turned = 0;
     if (*isNotMoving)
@@ -106,15 +142,36 @@ void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving, int *i
     switch (*key)
     {
     case 'w':
-        *y -= 8;
+        if (canMove(world, *mapX, *mapY, 4))
+        {
+            player->y -= 8;
+            if (!*isNotMoving)
+            {
+                *mapY -= 1;
+            }
+        }
         break;
     case 's':
-        *y += 8;
+        if (canMove(world, *mapX, *mapY, 2))
+        {
+            player->y += 8;
+            if (!*isNotMoving)
+            {
+                *mapY += 1;
+            }
+        }
         break;
     case 'a':
         if (*reverse)
         {
-            *x -= 8 * 3;
+            if (canMove(world, *mapX, *mapY, 3))
+            {
+                player->x -= 8 * 3;
+                if (!*isNotMoving)
+                {
+                    *mapX -= 1;
+                }
+            }
         }
         else
         {
@@ -125,8 +182,14 @@ void playerMove(int *key, int *x, int *y, int *reverse, int *isNotMoving, int *i
     case 'd':
         if (!*reverse)
         {
-
-            *x += 8 * 3;
+            if (canMove(world, *mapX, *mapY, 1))
+            {
+                player->x += 8 * 3;
+                if (!*isNotMoving)
+                {
+                    *mapX += 1;
+                }
+            }
         }
         else
         {
@@ -212,17 +275,20 @@ void nameScreen(PLAYER *player)
     }
 }
 
-void load(PLAYER *player, int *isOnTitle, int *isStarting)
+void load(PLAYER *player, int *isOnTitle, int *isStarting, int start, char *file)
 {
     FILE *f;
-    f = fopen("playerData.dat", "rb");
+    f = fopen(file, "rb");
 
     if (f)
     {
         fread(player, sizeof(PLAYER), 1, f);
         fclose(f);
-        *isOnTitle = 0;
-        *isStarting = 0;
+        if (start)
+        {
+            *isOnTitle = 0;
+            *isStarting = 0;
+        }
     }
     else
     {
@@ -260,13 +326,14 @@ void startingScreen(PLAYER *player, int *isOnTitle)
             if (selected % 3 == 0)
             {
                 player->name[0] = '\0';
+                load(player, isOnTitle, &isStarting, 0, "sapo.dat");
                 nameScreen(player);
                 *isOnTitle = 0;
                 isStarting = 0;
             }
             else if (selected % 3 == 1)
             {
-                load(player, isOnTitle, &isStarting);
+                load(player, isOnTitle, &isStarting, 1, "playerData.dat");
             }
             else
             {
