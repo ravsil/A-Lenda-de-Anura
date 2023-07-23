@@ -23,6 +23,7 @@ typedef struct _PLAYER
 typedef struct _ENEMY
 {
     int life;
+    int maxLife;
     int attack;
     int defense;
     int accuracy;
@@ -31,3 +32,4 @@ typedef struct _ENEMY
 ENEMY enemy;
 SPRITE goomba;
 long long int characters[39];
+SPRITE assets[3];

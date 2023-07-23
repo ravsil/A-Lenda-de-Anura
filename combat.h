@@ -104,10 +104,10 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
                 if (!miss)
                 {
                     enemy->life -= (diceRoll(15)) ? 2 * player->magic / enemy->defense * 3 : player->magic / enemy->defense * 3;
+                    magicAnimation(player, enemy);
                 }
                 drawBox(10, 40, 210, 87);
                 drawText("voce feriu o inimigo usando\n   poderes sobrenaturais", 35 * 3, 90, 1);
-                magicAnimation();
                 getch();
             }
             else if (selected % 4 == 2)
@@ -154,6 +154,7 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
 void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
 {
     clear();
+    drawBattleInfo(player, enemy);
     drawSprite(&player->sprites[0], 45 * 3, 30, 0);
     drawSprite(&goomba, 150 * 3, 30, 1);
     drawBox(10, 40, 210, 87);
@@ -165,6 +166,7 @@ void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
     int fighting = 1;
     while (fighting)
     {
+        drawBattleInfo(player, enemy);
         drawBox(10, 40, 210, 87);
         drawText("o que voce vai fazer", 58 * 3, 85, 0);
         drawText("lutar", 60 * 3, 100, 0);

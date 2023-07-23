@@ -121,7 +121,7 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int c
     {
         return 0;
     }
-    else if (world[y - 1][x - 1] < 10)
+    else if (world[y - 1][x - 1] != 1)
     {
         if (diceRoll(25) && canBattle)
         {

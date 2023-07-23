@@ -24,6 +24,7 @@ int main()
     FILE *f;
 
     enemy.life = 10;
+    enemy.maxLife = 10;
     enemy.attack = 5;
     enemy.defense = 5;
     enemy.accuracy = 90;
@@ -32,16 +33,21 @@ int main()
     PLAYER player;
     fread(&player, sizeof(PLAYER), 1, f);
     fclose(f);
-    f = fopen("gomba.dat", "rb");
+    f = fopen("goomba.dat", "rb");
     fread(&goomba, sizeof(SPRITE), 1, f);
     fclose(f);
 
     f = fopen("bloco.dat", "rb");
-    SPRITE assets[1];
     fread(assets, sizeof(assets), 1, f);
     fclose(f);
 
     int world[7][14] = {{0}, {0}, {0}, {0}, {0}, {0}, {0}};
+    world[5][1] = 1;
+    world[5][2] = 1;
+    world[5][3] = 1;
+    world[5][4] = 1;
+    world[5][5] = 1;
+
     f = fopen("alfabeto.dat", "rb");
     fread(characters, sizeof(characters), 1, f);
     fclose(f);
@@ -53,7 +59,7 @@ int main()
         {
             continue;
         }
-        drawWorld(world, assets);
+        drawWorld(world);
 
         drawPlayer(&player, player.x, player.y, reverse, !isNotMoving);
         refresh();
