@@ -21,18 +21,18 @@ void status(PLAYER *player)
     strcat(life, "/");
     strcat(life, maxLife);
 
-    drawText(player->name, 40 * 3, 20);
-    drawText("vida", 40 * 3, 30);
-    drawText(life, 75 * 3, 30);
-    drawText("ataque", 40 * 3, 40);
-    drawText(attack, 80 * 3, 40);
-    drawText("defesa", 40 * 3, 50);
-    drawText(defense, 80 * 3, 50);
-    drawText("mana", 40 * 3, 60);
-    drawText(mana, 80 * 3, 60);
-    drawText("magia", 40 * 3, 70);
-    drawText(magic, 80 * 3, 70);
-    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 90);
+    drawText(player->name, 40 * 3, 20, 0);
+    drawText("vida", 40 * 3, 30, 0);
+    drawText(life, 75 * 3, 30, 0);
+    drawText("ataque", 40 * 3, 40, 0);
+    drawText(attack, 80 * 3, 40, 0);
+    drawText("defesa", 40 * 3, 50, 0);
+    drawText(defense, 80 * 3, 50, 0);
+    drawText("mana", 40 * 3, 60, 0);
+    drawText(mana, 80 * 3, 60, 0);
+    drawText("magia", 40 * 3, 70, 0);
+    drawText(magic, 80 * 3, 70, 0);
+    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 90, 0);
     getch();
 }
 
@@ -43,7 +43,7 @@ void save(PLAYER *player)
     fwrite(player, sizeof(PLAYER), 1, f);
     fclose(f);
     clear();
-    drawText("jogo salvo com sucesso", 50 * 3, 10);
+    drawText("jogo salvo com sucesso", 50 * 3, 10, 0);
     getch();
 }
 
@@ -56,10 +56,10 @@ void menu(int *isOnTitle, PLAYER *player)
     while (isOnMenu)
     {
         drawBox(100, 10, 150, 60);
-        drawText("status", 140 * 3, 25);
-        drawText("item", 140 * 3, 35);
-        drawText("salvar", 140 * 3, 45);
-        drawText("inicio", 140 * 3, 55);
+        drawText("status", 140 * 3, 25, 0);
+        drawText("item", 140 * 3, 35, 0);
+        drawText("salvar", 140 * 3, 45, 0);
+        drawText("inicio", 140 * 3, 55, 0);
         drawLetter(characters[37], 138 * 3, 25 + (selected % 4 * 10));
 
         key = getch();
@@ -95,7 +95,7 @@ void menu(int *isOnTitle, PLAYER *player)
     }
 }
 
-int canMove(int world[7][14], int x, int y, int direction)
+int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int canBattle)
 {
     switch (direction)
     {
@@ -123,6 +123,10 @@ int canMove(int world[7][14], int x, int y, int direction)
     }
     else if (world[y - 1][x - 1] < 10)
     {
+        if (diceRoll(25) && canBattle)
+        {
+            fight(player, &enemy, "uma cobra selvagem apareceu", 35);
+        }
         return 1;
     }
     else
@@ -142,7 +146,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     switch (*key)
     {
     case 'w':
-        if (canMove(world, *mapX, *mapY, 4))
+        if (canMove(world, *mapX, *mapY, 4, player, !*isNotMoving))
         {
             player->y -= 8;
             if (!*isNotMoving)
@@ -152,7 +156,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
         }
         break;
     case 's':
-        if (canMove(world, *mapX, *mapY, 2))
+        if (canMove(world, *mapX, *mapY, 2, player, !*isNotMoving))
         {
             player->y += 8;
             if (!*isNotMoving)
@@ -164,7 +168,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'a':
         if (*reverse)
         {
-            if (canMove(world, *mapX, *mapY, 3))
+            if (canMove(world, *mapX, *mapY, 3, player, !*isNotMoving))
             {
                 player->x -= 8 * 3;
                 if (!*isNotMoving)
@@ -182,7 +186,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'd':
         if (!*reverse)
         {
-            if (canMove(world, *mapX, *mapY, 1))
+            if (canMove(world, *mapX, *mapY, 1, player, !*isNotMoving))
             {
                 player->x += 8 * 3;
                 if (!*isNotMoving)

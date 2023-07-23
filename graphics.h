@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <time.h>
 
 void drawSprite(SPRITE *sprite, int x, int y, int invert)
 {
@@ -64,7 +65,7 @@ void drawLetter(long long int character, int x, int y)
     attroff(COLOR_PAIR(20));
 }
 
-void drawText(char *string, int x, int y)
+void drawText(char *string, int x, int y, int animate)
 {
     int index;
     int initialX = x;
@@ -96,12 +97,20 @@ void drawText(char *string, int x, int y)
 
         x += 16;
         drawLetter(characters[index], x, y);
+        refresh();
+        if (animate)
+        {
+            struct timespec delay;
+            delay.tv_sec = 0;
+            delay.tv_nsec = 1000000000 / 30;
+            nanosleep(&delay, NULL);
+        }
     }
 }
 
 void drawBox(int x0, int y0, int x, int y)
 {
-    init_pair(21, COLOR_BLACK, COLOR_BLACK);
+    init_pair(21, 13, 13);
     attron(COLOR_PAIR(21));
     for (int i = y0; i < y; i++)
     {
@@ -112,4 +121,9 @@ void drawBox(int x0, int y0, int x, int y)
         }
     }
     attroff(COLOR_PAIR(21));
+}
+
+void magicAnimation()
+{
+    return;
 }

@@ -11,12 +11,12 @@ void nameScreen(PLAYER *player)
     while (isOnName)
     {
         clear();
-        drawText("a lenda de anura", 65 * 3, 10);
-        drawText("diga seu nome", 10 * 3, 40);
+        drawText("a lenda de anura", 65 * 3, 10, 0);
+        drawText("diga seu nome", 10 * 3, 40, 0);
         curLetter = curLetter % 37;
 
         drawLetter(characters[curLetter], 15 * 3 + (index * 8 * 2), 50);
-        drawText(player->name, 9 * 3, 50);
+        drawText(player->name, 9 * 3, 50, 0);
         key = getch();
         switch (key)
         {
@@ -76,8 +76,8 @@ void load(PLAYER *player, int *isOnTitle, int *isStarting, int start, char *file
     else
     {
         clear();
-        drawText("nenhum salvamento encontrado", 35 * 3, 10);
-        drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80);
+        drawText("nenhum salvamento encontrado", 35 * 3, 10, 0);
+        drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80, 0);
         getch();
     }
     return;
@@ -96,10 +96,10 @@ void startingScreen(PLAYER *player, int *isOnTitle)
     while (isStarting)
     {
         clear();
-        drawText("a lenda de anura", 65 * 3, 10);
-        drawText("novo jogo", 80 * 3, 60);
-        drawText("continuar", 80 * 3, 70);
-        drawText("recordes", 80 * 3, 80);
+        drawText("a lenda de anura", 65 * 3, 10, 0);
+        drawText("novo jogo", 80 * 3, 60, 0);
+        drawText("continuar", 80 * 3, 70, 0);
+        drawText("recordes", 80 * 3, 80, 0);
         drawLetter(characters[37], 75 * 3, 60 + (selected % 3 * 10));
 
         key = getch();
@@ -139,21 +139,21 @@ void startingScreen(PLAYER *player, int *isOnTitle)
 void credits()
 {
     clear();
-    drawText("esther mussi de castro", 40 * 3, 30);
-    drawText("maria eduarda oliveira", 40 * 3, 40);
-    drawText("rafael vieira da silva", 40 * 3, 50);
-    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80);
+    drawText("esther mussi de castro", 40 * 3, 30, 0);
+    drawText("maria eduarda oliveira", 40 * 3, 40, 0);
+    drawText("rafael vieira da silva", 40 * 3, 50, 0);
+    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80, 0);
     getch();
 }
 
 void controls()
 {
     clear();
-    drawText("wasd  andar", 40 * 3, 30);
-    drawText("j     confirmar", 40 * 3, 40);
-    drawText("h     cancelar", 40 * 3, 50);
-    drawText("k     menu", 40 * 3, 60);
-    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80);
+    drawText("wasd  andar", 40 * 3, 30, 0);
+    drawText("j     confirmar", 40 * 3, 40, 0);
+    drawText("h     cancelar", 40 * 3, 50, 0);
+    drawText("k     menu", 40 * 3, 60, 0);
+    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80, 0);
     getch();
 }
 
@@ -165,13 +165,13 @@ void titleScreen(PLAYER *player, int *key, unsigned int *selected, int *isOnTitl
     }
 
     clear();
-    drawText("a lenda de anura", 65 * 3, 10);
-    drawText("iniciar", 80 * 3, 60);
-    drawText("creditos", 80 * 3, 70);
-    drawText("controles", 80 * 3, 80);
-    drawText("sair", 80 * 3, 90);
-    drawText("wasd", 0, 100);
-    drawText("j", 200 * 3, 100);
+    drawText("a lenda de anura", 65 * 3, 10, 0);
+    drawText("iniciar", 80 * 3, 60, 0);
+    drawText("creditos", 80 * 3, 70, 0);
+    drawText("controles", 80 * 3, 80, 0);
+    drawText("sair", 80 * 3, 90, 0);
+    drawText("wasd", 0, 100, 0);
+    drawText("j", 200 * 3, 100, 0);
     drawLetter(characters[37], 75 * 3, 60 + (*selected % 4 * 10));
     *key = getch();
 

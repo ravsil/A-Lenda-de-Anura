@@ -13,6 +13,8 @@ typedef struct _PLAYER
     int defense;
     int mana;
     int magic;
+    int potions;
+    int xp;
     int x;
     int y;
     int curScreen;
@@ -26,4 +28,6 @@ typedef struct _ENEMY
     int accuracy;
 } ENEMY;
 
+ENEMY enemy;
+SPRITE goomba;
 long long int characters[39];
