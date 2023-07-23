@@ -3,6 +3,8 @@
 #include "variables.h"
 #include "graphics.h"
 #include "logic.h"
+#include "mainMenu.h"
+#include "combat.h"
 
 int main()
 {

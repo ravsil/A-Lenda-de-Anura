@@ -23,6 +23,7 @@ typedef struct _ENEMY
     int life;
     int attack;
     int defense;
+    int accuracy;
 } ENEMY;
 
 long long int characters[39];
