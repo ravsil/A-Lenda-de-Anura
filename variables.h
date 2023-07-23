@@ -15,6 +15,9 @@ typedef struct _PLAYER
     int magic;
     int potions;
     int xp;
+    int lvl;
+    int mapX;
+    int mapY;
     int x;
     int y;
     int curScreen;
@@ -31,5 +34,5 @@ typedef struct _ENEMY
 
 ENEMY enemy;
 SPRITE goomba;
-long long int characters[39];
+long long int characters[45];
 SPRITE assets[3];

@@ -49,10 +49,16 @@ void nameScreen(PLAYER *player)
             player->name[index] = '\0';
             break;
         case 'w':
-            curLetter = (curLetter == 0) ? 36 : curLetter - 1;
+            if (index < 8)
+            {
+                curLetter = (curLetter == 0) ? 36 : curLetter - 1;
+            }
             break;
         case 's':
-            curLetter++;
+            if (index < 8)
+            {
+                curLetter++;
+            }
             break;
         }
     }
@@ -109,7 +115,7 @@ void startingScreen(PLAYER *player, int *isOnTitle)
             if (selected % 3 == 0)
             {
                 player->name[0] = '\0';
-                load(player, isOnTitle, &isStarting, 0, "sapo.dat");
+                load(player, isOnTitle, &isStarting, 0, "player.dat");
                 nameScreen(player);
                 *isOnTitle = 0;
                 isStarting = 0;

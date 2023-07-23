@@ -104,8 +104,8 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
                 if (!miss)
                 {
                     enemy->life -= (diceRoll(15)) ? 2 * player->magic / enemy->defense * 3 : player->magic / enemy->defense * 3;
-                    magicAnimation(player, enemy);
                 }
+                magicAnimation(player, enemy, miss);
                 drawBox(10, 40, 210, 87);
                 drawText("voce feriu o inimigo usando\n   poderes sobrenaturais", 35 * 3, 90, 1);
                 getch();

@@ -83,17 +83,40 @@ void drawText(char *string, int x, int y, int animate)
             x += 8 * 2;
             continue;
         }
-        else if (string[i] >= 'a')
+        else if (string[i] >= 'a' && string[i] <= 'z')
         {
             index = string[i] - 'a';
         }
-        else if (string[i] >= '0')
+        else if (string[i] >= '0' && string[i] <= '9')
         {
             index = string[i] - '0' + 26;
         }
-        else if (string[i] == '/')
+        else
         {
-            index = 38;
+            switch (string[i])
+            {
+            case '/':
+                index = 38;
+                break;
+            case '?':
+                index = 39;
+                break;
+            case '!':
+                index = 40;
+                break;
+            case '.':
+                index = 41;
+                break;
+            case ',':
+                index = 42;
+                break;
+            case ')':
+                index = 43;
+                break;
+            case '(':
+                index = 44;
+                break;
+            }
         }
 
         x += 16;
@@ -155,7 +178,7 @@ void drawBattleInfo(PLAYER *player, ENEMY *enemy)
     drawText(enemyInfo, 115 * 3, 5, 0);
 }
 
-void magicAnimation(PLAYER *player, ENEMY *enemy)
+void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
 {
     for (int i = 0; i < 5; i++)
     {
@@ -164,7 +187,7 @@ void magicAnimation(PLAYER *player, ENEMY *enemy)
         drawSprite(&player->sprites[0], 45 * 3, 30, 0);
         drawSprite(&goomba, 150 * 3, 30, 1);
         drawBox(10, 40, 210, 87);
-        drawSprite(&assets[2], 65 * 3 + 48 * i, 30, 0);
+        drawSprite(&assets[2], 65 * 3 + 48 * i, 30 + (miss * i * 5), 0);
         struct timespec delay;
         delay.tv_sec = 0;
         delay.tv_nsec = 1000000000 / 10;

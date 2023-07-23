@@ -17,8 +17,6 @@ int main()
     int reverse = 0;
     int isNotMoving = 1;
     int isOnTitle = 1;
-    int mapX = 1;
-    int mapY = 1;
     unsigned int selected = 0;
     int key;
     FILE *f;
@@ -29,8 +27,9 @@ int main()
     enemy.defense = 5;
     enemy.accuracy = 90;
 
-    f = fopen("sapo.dat", "rb");
+    f = fopen("player.dat", "rb");
     PLAYER player;
+
     fread(&player, sizeof(PLAYER), 1, f);
     fclose(f);
     f = fopen("goomba.dat", "rb");
@@ -59,11 +58,12 @@ int main()
         {
             continue;
         }
+
         drawWorld(world);
 
         drawPlayer(&player, player.x, player.y, reverse, !isNotMoving);
         refresh();
-        playerMove(&key, &reverse, &isNotMoving, &isOnTitle, &player, world, &mapX, &mapY);
+        playerMove(&key, &reverse, &isNotMoving, &isOnTitle, &player, world);
 
         if (player.life <= 0)
         {

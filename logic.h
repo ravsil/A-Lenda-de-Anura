@@ -123,7 +123,7 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int c
     }
     else if (world[y - 1][x - 1] != 1)
     {
-        if (diceRoll(25) && canBattle)
+        if (diceRoll(20) && canBattle)
         {
             fight(player, &enemy, "uma cobra selvagem apareceu", 35);
         }
@@ -135,7 +135,7 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int c
     }
 }
 
-void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER *player, int world[7][14], int *mapX, int *mapY)
+void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER *player, int world[7][14])
 {
     int turned = 0;
     if (*isNotMoving)
@@ -146,34 +146,34 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     switch (*key)
     {
     case 'w':
-        if (canMove(world, *mapX, *mapY, 4, player, !*isNotMoving))
+        if (canMove(world, player->mapX, player->mapY, 4, player, !*isNotMoving))
         {
             player->y -= 8;
             if (!*isNotMoving)
             {
-                *mapY -= 1;
+                player->mapY -= 1;
             }
         }
         break;
     case 's':
-        if (canMove(world, *mapX, *mapY, 2, player, !*isNotMoving))
+        if (canMove(world, player->mapX, player->mapY, 2, player, !*isNotMoving))
         {
             player->y += 8;
             if (!*isNotMoving)
             {
-                *mapY += 1;
+                player->mapY += 1;
             }
         }
         break;
     case 'a':
         if (*reverse)
         {
-            if (canMove(world, *mapX, *mapY, 3, player, !*isNotMoving))
+            if (canMove(world, player->mapX, player->mapY, 3, player, !*isNotMoving))
             {
                 player->x -= 8 * 3;
                 if (!*isNotMoving)
                 {
-                    *mapX -= 1;
+                    player->mapX -= 1;
                 }
             }
         }
@@ -186,12 +186,12 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'd':
         if (!*reverse)
         {
-            if (canMove(world, *mapX, *mapY, 1, player, !*isNotMoving))
+            if (canMove(world, player->mapX, player->mapY, 1, player, !*isNotMoving))
             {
                 player->x += 8 * 3;
                 if (!*isNotMoving)
                 {
-                    *mapX += 1;
+                    player->mapX += 1;
                 }
             }
         }
