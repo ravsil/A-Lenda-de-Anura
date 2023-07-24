@@ -17,6 +17,7 @@ int main()
     int reverse = 0;
     int isNotMoving = 1;
     int isOnTitle = 1;
+    int isMagic = 0;
     unsigned int selected = 0;
     int key;
     FILE *f;
@@ -27,28 +28,22 @@ int main()
     enemy.defense = 5;
     enemy.accuracy = 90;
 
-    f = fopen("player.dat", "rb");
+    f = fopen("bin/player.dat", "rb");
     PLAYER player;
 
     fread(&player, sizeof(PLAYER), 1, f);
     fclose(f);
-    f = fopen("goomba.dat", "rb");
-    fread(&goomba, sizeof(SPRITE), 1, f);
-    fclose(f);
 
-    f = fopen("bloco.dat", "rb");
+    f = fopen("bin/assets.dat", "rb");
     fread(assets, sizeof(assets), 1, f);
     fclose(f);
 
-    int world[7][14] = {{0}, {0}, {0}, {0}, {0}, {0}, {0}};
-    world[5][1] = 1;
-    world[5][2] = 1;
-    world[5][3] = 1;
-    world[5][4] = 1;
-    world[5][5] = 1;
-
-    f = fopen("alfabeto.dat", "rb");
+    f = fopen("bin/characters.dat", "rb");
     fread(characters, sizeof(characters), 1, f);
+    fclose(f);
+
+    f = fopen("bin/screens.dat", "rb");
+    fread(screens, sizeof(screens), 1, f);
     fclose(f);
 
     while (mainLoop)
@@ -59,11 +54,11 @@ int main()
             continue;
         }
 
-        drawWorld(world);
+        drawWorld(screens[player.curScreen].world);
 
-        drawPlayer(&player, player.x, player.y, reverse, !isNotMoving);
+        drawPlayer(&player, player.x, player.y, reverse, !isNotMoving + isMagic);
         refresh();
-        playerMove(&key, &reverse, &isNotMoving, &isOnTitle, &player, world);
+        playerMove(&key, &reverse, &isNotMoving, &isOnTitle, &player, screens[player.curScreen].world);
 
         if (player.life <= 0)
         {

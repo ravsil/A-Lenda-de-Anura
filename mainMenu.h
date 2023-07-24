@@ -115,14 +115,14 @@ void startingScreen(PLAYER *player, int *isOnTitle)
             if (selected % 3 == 0)
             {
                 player->name[0] = '\0';
-                load(player, isOnTitle, &isStarting, 0, "player.dat");
+                load(player, isOnTitle, &isStarting, 0, "bin/player.dat");
                 nameScreen(player);
                 *isOnTitle = 0;
                 isStarting = 0;
             }
             else if (selected % 3 == 1)
             {
-                load(player, isOnTitle, &isStarting, 1, "playerData.dat");
+                load(player, isOnTitle, &isStarting, 1, "bin/playerData.dat");
             }
             else
             {

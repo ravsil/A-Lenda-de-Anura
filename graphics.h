@@ -4,13 +4,13 @@
 
 void drawSprite(SPRITE *sprite, int x, int y, int invert)
 {
-    unsigned long long int seven = 7;
+    unsigned long long int fifteen = 15;
 
     for (int i = 0; i < 16; i++)
     {
         for (int j = 0; j < 16; j++)
         {
-            int colorIndex = (sprite->lines[i] & (seven << j * 4)) >> j * 4;
+            int colorIndex = (sprite->lines[i] & (fifteen << j * 4)) >> j * 4;
             if (colorIndex == 0)
             {
                 continue;
@@ -38,18 +38,39 @@ void drawPlayer(PLAYER *player, int x, int y, int invert, int animationFrame)
 
 void drawWorld(int world[7][14])
 {
+    int index;
     for (int i = 0; i < 7; i++)
     {
         for (int j = 0; j < 14; j++)
         {
-            drawSprite(&assets[world[i][j]], j * 16 * 3, i * 16, 0);
+            if (world[i][j] < 0)
+            {
+                index = world[i][j] * -1 - 1;
+            }
+            else if (world[i][j] < -50)
+            {
+                index = (world[i][j] + 50) * -1 - 1;
+            }
+            else if (world[i][j] > 100)
+            {
+                index = world[i][j] - 100 - 1;
+            }
+            else if (world[i][j] > 50)
+            {
+                index = world[i][j] - 50 - 1;
+            }
+            else
+            {
+                index = world[i][j];
+            }
+            drawSprite(&assets[index], j * 16 * 3, i * 16, 0);
         }
     }
 }
 
 void drawLetter(long long int character, int x, int y)
 {
-    init_pair(20, COLOR_WHITE, COLOR_WHITE);
+    init_pair(20, 2, 2);
     attron(COLOR_PAIR(20));
     long long int comparator = 1;
     for (int i = 0; i < 7; i++)
@@ -185,7 +206,7 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
         clear();
         drawBattleInfo(player, enemy);
         drawSprite(&player->sprites[0], 45 * 3, 30, 0);
-        drawSprite(&goomba, 150 * 3, 30, 1);
+        drawSprite(&assets[4], 150 * 3, 30, 1);
         drawBox(10, 40, 210, 87);
         drawSprite(&assets[2], 65 * 3 + 48 * i, 30 + (miss * i * 5), 0);
         struct timespec delay;
@@ -198,5 +219,5 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
     clear();
     drawBattleInfo(player, enemy);
     drawSprite(&player->sprites[0], 45 * 3, 30, 0);
-    drawSprite(&goomba, 150 * 3, 30, 1);
+    drawSprite(&assets[3], 150 * 3, 30, 1);
 }

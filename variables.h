@@ -5,7 +5,7 @@ typedef struct _SPRITE
 
 typedef struct _PLAYER
 {
-    SPRITE sprites[2];
+    SPRITE sprites[4];
     char name[9];
     int life;
     int maxLife;
@@ -32,7 +32,12 @@ typedef struct _ENEMY
     int accuracy;
 } ENEMY;
 
+typedef struct _GAME_SCREEN
+{
+    int world[7][14];
+} GAME_SCREEN;
+
 ENEMY enemy;
-SPRITE goomba;
 long long int characters[45];
-SPRITE assets[3];
+SPRITE assets[4];
+GAME_SCREEN screens[4];

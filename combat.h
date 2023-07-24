@@ -156,7 +156,7 @@ void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
     clear();
     drawBattleInfo(player, enemy);
     drawSprite(&player->sprites[0], 45 * 3, 30, 0);
-    drawSprite(&goomba, 150 * 3, 30, 1);
+    drawSprite(&assets[3], 150 * 3, 30, 1);
     drawBox(10, 40, 210, 87);
     drawText(text, textPos * 3, 90, 1);
     int turn = diceRoll(50);
