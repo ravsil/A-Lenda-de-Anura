@@ -113,6 +113,73 @@ void seekNewPos(PLAYER *player)
     }
 }
 
+void distributeStats(PLAYER *player)
+{
+    player->mana = 20;
+    int totalStats = 5;
+    int distributing = 1;
+    int key;
+    unsigned int selected = 0;
+    int stats[] = {0, 0, 0, 0};
+    while (distributing)
+    {
+        clear();
+        drawText("distribua suas habilidades", 10 * 3, 20, 0);
+        drawText("vida    1", 10 * 3, 30, 0);
+        drawText("ataque ", 10 * 3, 40, 0);
+        drawText("defesa ", 10 * 3, 50, 0);
+        drawText("magia  ", 10 * 3, 60, 0);
+        drawLetter(characters[26 + stats[0]], 63 * 3, 30);
+        drawLetter(characters[30 + stats[1]], 62 * 3, 40);
+        drawLetter(characters[30 + stats[2]], 62 * 3, 50);
+        drawLetter(characters[30 + stats[3]], 62 * 3, 60);
+        drawLetter(characters[37], 52 * 3, 30 + (selected * 10));
+        drawText("pontos disponiveis ", 10 * 3, 70, 0);
+        drawLetter(characters[26 + totalStats], 117 * 3, 70);
+
+        if (totalStats == 0)
+        {
+            drawText("pressione j para confirmar", 10 * 3, 90, 0);
+        }
+
+        key = getch();
+
+        switch (key)
+        {
+        case 'j':
+            if (totalStats == 0)
+            {
+                distributing = 0;
+            }
+            break;
+        case 'w':
+            selected = (selected == 0) ? 3 : selected - 1;
+            break;
+        case 's':
+            selected = (selected == 3) ? 0 : selected + 1;
+            break;
+        case 'a':
+            if (stats[selected] != 0)
+            {
+                stats[selected] -= 1;
+                totalStats++;
+            }
+            break;
+        case 'd':
+            if (totalStats > 0)
+            {
+                stats[selected] += 1;
+                totalStats--;
+            }
+        }
+
+        player->life = 10 + stats[0];
+        player->attack = 5 + stats[1];
+        player->defense = 5 + stats[2];
+        player->magic = 5 + stats[3];
+    }
+}
+
 int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *isNotMoving, int reverse)
 {
     int canBattle = !*isNotMoving;
@@ -142,15 +209,37 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *
     }
     else if (world[y - 1][x - 1] != 1)
     {
-        if (diceRoll(15) && canBattle && player->curScreen >= 2)
+        if (diceRoll(25) && canBattle && player->curScreen >= 2)
         {
-            fight(player, &enemy, "uma cobra selvagem apareceu", 35);
+            fight(player, diceRoll(50), "uma cobra selvagem apareceu", 35);
         }
 
         switch (world[y - 1][x - 1])
         {
         case 21:
-            // cutscene();
+            cutscene();
+            distributeStats(player);
+            world[y - 1][x - 1] = 0;
+            switch (direction)
+            {
+            case 1:
+                player->x -= 8 * 3;
+                player->mapX -= 1;
+                break;
+            case 2:
+                player->y -= 8;
+                player->mapY -= 1;
+                break;
+            case 3:
+                player->x += 8 * 3;
+                player->mapX += 1;
+                break;
+            case 4:
+                player->y += 8;
+                player->mapY += 1;
+                break;
+            }
+            return 0;
             break;
         case 22:
         case 23:

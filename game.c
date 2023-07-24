@@ -20,13 +20,8 @@ int main()
     int isMagic = 0;
     unsigned int selected = 0;
     int key;
+    int ending = 0;
     FILE *f;
-
-    enemy.life = 10;
-    enemy.maxLife = 10;
-    enemy.attack = 5;
-    enemy.defense = 5;
-    enemy.accuracy = 90;
 
     f = fopen("bin/player.dat", "rb");
     PLAYER player;
@@ -60,17 +55,38 @@ int main()
         refresh();
         playerMove(&key, &reverse, &isNotMoving, &isOnTitle, &player, screens[player.curScreen].world);
 
+        if (player.mana > 0)
+        {
+            isMagic = 2;
+        }
+
         if (player.life <= 0)
         {
             mainLoop = 0;
+            ending = 1;
+        }
+        else if (player.mana < 0)
+        {
+            mainLoop = 0;
+            ending = 2;
         }
     }
 
     clear();
-    drawText("fim de jogo", 75 * 3, 10, 0);
-    drawText("voce perdeu", 75 * 3, 20, 0);
-    getch();
+    switch (ending)
+    {
+    case 1:
+        drawText("fim de jogo", 75 * 3, 10, 0);
+        drawText("voce morreu", 75 * 3, 40, 0);
+        break;
+    case 2:
+        drawText("fim de jogo", 75 * 3, 10, 0);
+        drawText("voce perdeu seus poderes magicos", 20 * 3, 40, 0);
+        drawText("e se tornou um sapo comum novamente", 15 * 3, 50, 0);
+        break;
+    }
 
+    getch();
     endwin();
     return 0;
 }

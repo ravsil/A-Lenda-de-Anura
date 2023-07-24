@@ -2,6 +2,56 @@
 #include <stdlib.h>
 #include <time.h>
 
+int levelUp(PLAYER *player)
+{
+    int choosing = 1;
+    int key;
+    unsigned int selected = 0;
+    while (choosing)
+    {
+        clear();
+        drawText("parabens, voce subiu de nivel!", 10 * 3, 20, 0);
+        drawText("escolha uma habilidade para melhorar", 10 * 3, 30, 0);
+        drawText("vida", 15 * 3, 40, 0);
+        drawText("ataque", 15 * 3, 50, 0);
+        drawText("defesa", 15 * 3, 60, 0);
+        drawText("magia", 15 * 3, 70, 0);
+        drawLetter(characters[37], 10 * 3, 40 + (selected * 10));
+
+        drawText("pressione j para confirmar", 10 * 3, 90, 1);
+
+        key = getch();
+
+        switch (key)
+        {
+        case 'j':
+            choosing = 0;
+            switch (selected)
+            {
+            case 0:
+                player->maxLife += 3;
+                break;
+            case 1:
+                player->attack += 2;
+                break;
+            case 2:
+                player->defense += 2;
+                break;
+            case 3:
+                player->magic += 3;
+                break;
+            }
+            break;
+        case 'w':
+            selected = (selected == 0) ? 3 : selected - 1;
+            break;
+        case 's':
+            selected = (selected == 3) ? 0 : selected + 1;
+            break;
+        }
+    }
+}
+
 int diceRoll(int chance)
 {
     srand(time(NULL));
@@ -67,7 +117,7 @@ void useItem(PLAYER *player, int *turn)
     }
 }
 
-void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
+void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting, int enemyType)
 {
     int attacking = 1;
     int key;
@@ -92,7 +142,7 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
                 miss = diceRoll(10);
                 if (!miss)
                 {
-                    enemy->life -= (diceRoll(15)) ? 2 * player->attack / enemy->defense : player->attack / enemy->defense;
+                    enemy->life -= (diceRoll(15)) ? 4 * player->attack / enemy->defense : 2 * player->attack / enemy->defense;
                 }
                 drawBox(10, 40, 210, 87);
                 drawText("voce bateu no inimigo", 50 * 3, 90, 1);
@@ -103,10 +153,11 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
                 miss = diceRoll(10);
                 if (!miss)
                 {
-                    enemy->life -= (diceRoll(15)) ? 2 * player->magic / enemy->defense * 3 : player->magic / enemy->defense * 3;
+                    enemy->life -= (diceRoll(15)) ? 4 * player->magic / enemy->defense * 3 : 2 * player->magic / enemy->defense * 3;
                 }
                 magicAnimation(player, enemy, miss);
                 drawBox(10, 40, 210, 87);
+                player->mana -= 1;
                 drawText("voce feriu o inimigo usando\n   poderes sobrenaturais", 35 * 3, 90, 1);
                 getch();
             }
@@ -134,6 +185,12 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
             {
                 drawBox(10, 40, 210, 87);
                 drawText("o inimigo foi derrotado", 45 * 3, 90, 1);
+                player->xp += (enemyType == 0) ? 50 : 100;
+                if (player->xp / 100 > player->lvl)
+                {
+                    player->lvl += 1;
+                    levelUp(player);
+                }
                 *fighting = 0;
             }
             *turn = 0;
@@ -151,10 +208,36 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting)
     }
 }
 
-void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
+void fight(PLAYER *player, int enemyType, char *text, int textPos)
 {
+    ENEMY enemy;
+    switch (enemyType)
+    {
+    case 0:
+        enemy.life = 10;
+        enemy.maxLife = 10;
+        enemy.attack = 5;
+        enemy.defense = 5;
+        enemy.accuracy = 90;
+        break;
+    case 1:
+        enemy.life = 5;
+        enemy.maxLife = 5;
+        enemy.attack = 10;
+        enemy.defense = 10;
+        enemy.accuracy = 80;
+        break;
+    case 2:
+        enemy.life = 50;
+        enemy.maxLife = 50;
+        enemy.attack = 30;
+        enemy.defense = 30;
+        enemy.accuracy = 95;
+        break;
+    }
+
     clear();
-    drawBattleInfo(player, enemy);
+    drawBattleInfo(player, &enemy);
     drawSprite(&player->sprites[0], 45 * 3, 30, 0);
     drawSprite(&assets[3], 150 * 3, 30, 1);
     drawBox(10, 40, 210, 87);
@@ -166,7 +249,7 @@ void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
     int fighting = 1;
     while (fighting)
     {
-        drawBattleInfo(player, enemy);
+        drawBattleInfo(player, &enemy);
         drawBox(10, 40, 210, 87);
         drawText("o que voce vai fazer", 58 * 3, 85, 0);
         drawText("lutar", 60 * 3, 100, 0);
@@ -183,7 +266,7 @@ void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
             case 'j':
                 if (selected % 3 == 0)
                 {
-                    playerTurn(player, enemy, &turn, &fighting);
+                    playerTurn(player, &enemy, &turn, &fighting, enemyType);
                 }
                 else if (selected % 3 == 1)
                 {
@@ -218,7 +301,7 @@ void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
         }
         else
         {
-            miss = diceRoll(100 - enemy->accuracy);
+            miss = diceRoll(100 - enemy.accuracy);
             if (miss)
             {
                 turn = !turn;
@@ -235,7 +318,7 @@ void fight(PLAYER *player, ENEMY *enemy, char *text, int textPos)
             drawText("voce foi ferido pelo inimigo", 35 * 3, 90, 1);
             getch();
 
-            player->life -= (diceRoll(15)) ? enemy->attack / player->defense * 2 : enemy->attack / player->defense;
+            player->life -= (diceRoll(15)) ? enemy.attack / player->defense * 2 : enemy.attack / player->defense;
 
             if (player->life <= 0)
             {

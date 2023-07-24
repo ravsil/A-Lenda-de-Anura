@@ -193,8 +193,8 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
     {
         clear();
         drawBattleInfo(player, enemy);
-        drawSprite(&player->sprites[0], 45 * 3, 30, 0);
-        drawSprite(&assets[4], 150 * 3, 30, 1);
+        drawSprite(&player->sprites[2], 45 * 3, 30, 0);
+        drawSprite(&assets[3], 150 * 3, 30, 1);
         drawBox(10, 40, 210, 87);
         drawSprite(&assets[2], 65 * 3 + 48 * i, 30 + (miss * i * 5), 0);
         struct timespec delay;
@@ -206,6 +206,13 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
 
     clear();
     drawBattleInfo(player, enemy);
-    drawSprite(&player->sprites[0], 45 * 3, 30, 0);
+    drawSprite(&player->sprites[2], 45 * 3, 30, 0);
     drawSprite(&assets[3], 150 * 3, 30, 1);
+}
+
+void cutscene()
+{
+    drawBox(10, 40, 210, 87);
+    drawText("usar pocao", 10 * 3, 90, 0);
+    getch();
 }

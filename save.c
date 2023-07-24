@@ -48,10 +48,10 @@ int main()
     }
     player.life = 10;
     player.maxLife = 10;
-    player.attack = 5;
-    player.defense = 5;
-    player.mana = 20;
-    player.magic = 5;
+    player.attack = 4;
+    player.defense = 4;
+    player.mana = 0;
+    player.magic = 4;
     player.potions = 1;
     player.xp = 0;
     player.lvl = 1;
@@ -101,6 +101,7 @@ int main()
     }
     screen[0].world[2][13] = 23;
     screen[1].world[2][0] = 22;
+    screen[1].world[4][4] = 21;
     screen[1].world[3][3] = 3;
     file = fopen("bin/screens.dat", "wb");
     fwrite(screen, sizeof(screen), 1, file);
