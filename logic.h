@@ -97,23 +97,23 @@ void menu(int *isOnTitle, PLAYER *player)
 
 void seekNewPos(PLAYER *player)
 {
-    // for (int i = 0; i < 7; i++)
-    // {
-    //     for (int j = 0; j < 14; j++)
-    //     {
-    //         if (screens[player->curScreen].world[i][j] < 100 && screens[player->curScreen].world[i][j] > 50)
+    for (int i = 0; i < 7; i++)
     {
-        player->mapX = 1; // j + 1;
-        player->mapY = 1; // i + 1;
-        player->x = 0;    // 16 * 3 * (player->mapX - 1) + 8;
-        player->y = 0;    // 16 * (player->mapY - 1);
-        return;
+        for (int j = 0; j < 14; j++)
+        {
+            if (screens[player->curScreen].world[i][j] == 22 || screens[player->curScreen].world[i][j] == 23)
+            {
+                player->mapX = j + 1;
+                player->mapY = i + 1;
+                player->x = 16 * 3 * j;
+                player->y = 16 * i;
+                return;
+            }
+        }
     }
-    //     }
-    // }
 }
 
-int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *isNotMoving)
+int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *isNotMoving, int reverse)
 {
     int canBattle = !*isNotMoving;
     switch (direction)
@@ -142,24 +142,28 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *
     }
     else if (world[y - 1][x - 1] != 1)
     {
-        if (diceRoll(15) && canBattle && player->curScreen >= 1)
+        if (diceRoll(15) && canBattle && player->curScreen >= 2)
         {
             fight(player, &enemy, "uma cobra selvagem apareceu", 35);
         }
-        if (world[y - 1][x - 1] > 100)
+
+        switch (world[y - 1][x - 1])
         {
+        case 21:
             // cutscene();
-        }
-        // maior q 100 = cutscene, maior q 50 = prox posicao, menor q 0 avanca tela, menor q -50 volta tela
-        else if (world[y - 1][x - 1] < 0)
-        {
-            player->curScreen += 1;
+            break;
+        case 22:
+        case 23:
+            if (reverse)
+            {
+                player->curScreen -= 1;
+            }
+            else
+            {
+
+                player->curScreen += 1;
+            }
             seekNewPos(player);
-            // *isNotMoving = !*isNotMoving;
-        }
-        else if (world[y - 1][x - 1] < -50)
-        {
-            player->curScreen -= 1;
         }
 
         return 1;
@@ -181,7 +185,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     switch (*key)
     {
     case 'w':
-        if (canMove(world, player->mapX, player->mapY, 4, player, isNotMoving))
+        if (canMove(world, player->mapX, player->mapY, 4, player, isNotMoving, *reverse))
         {
             player->y -= 8;
             if (!*isNotMoving)
@@ -191,7 +195,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
         }
         break;
     case 's':
-        if (canMove(world, player->mapX, player->mapY, 2, player, isNotMoving))
+        if (canMove(world, player->mapX, player->mapY, 2, player, isNotMoving, *reverse))
         {
             player->y += 8;
             if (!*isNotMoving)
@@ -203,7 +207,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'a':
         if (*reverse)
         {
-            if (canMove(world, player->mapX, player->mapY, 3, player, isNotMoving))
+            if (canMove(world, player->mapX, player->mapY, 3, player, isNotMoving, *reverse))
             {
                 player->x -= 8 * 3;
                 if (!*isNotMoving)
@@ -221,7 +225,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'd':
         if (!*reverse)
         {
-            if (canMove(world, player->mapX, player->mapY, 1, player, isNotMoving))
+            if (canMove(world, player->mapX, player->mapY, 1, player, isNotMoving, *reverse))
             {
                 player->x += 8 * 3;
                 if (!*isNotMoving)

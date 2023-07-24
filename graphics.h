@@ -43,21 +43,9 @@ void drawWorld(int world[7][14])
     {
         for (int j = 0; j < 14; j++)
         {
-            if (world[i][j] < 0)
+            if (world[i][j] > 20)
             {
-                index = world[i][j] * -1 - 1;
-            }
-            else if (world[i][j] < -50)
-            {
-                index = (world[i][j] + 50) * -1 - 1;
-            }
-            else if (world[i][j] > 100)
-            {
-                index = world[i][j] - 100 - 1;
-            }
-            else if (world[i][j] > 50)
-            {
-                index = world[i][j] - 50 - 1;
+                index = (world[i][j] == 22) ? 0 : 2;
             }
             else
             {

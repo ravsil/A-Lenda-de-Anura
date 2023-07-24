@@ -99,7 +99,8 @@ int main()
             screen[3].world[i][j] = 0;
         }
     }
-    screen[1].world[5][6] = 51;
+    screen[0].world[2][13] = 23;
+    screen[1].world[2][0] = 22;
     screen[1].world[3][3] = 3;
     file = fopen("bin/screens.dat", "wb");
     fwrite(screen, sizeof(screen), 1, file);
