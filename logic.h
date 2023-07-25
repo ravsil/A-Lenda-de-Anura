@@ -387,7 +387,7 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'f':
         if (player->mana > 0)
         {
-
+            cutscene3();
             fight(player, 2, "voce encontrou um humano", 35);
         }
         break;
