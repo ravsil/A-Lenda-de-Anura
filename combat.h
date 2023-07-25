@@ -18,7 +18,7 @@ int levelUp(PLAYER *player)
         drawText("magia", 15 * 3, 70, 0);
         drawLetter(characters[37], 10 * 3, 40 + (selected * 10));
 
-        drawText("pressione j para confirmar", 10 * 3, 90, 1);
+        drawText("pressione j para confirmar", 10 * 3, 90, 0);
 
         key = getch();
 
@@ -82,7 +82,7 @@ void useItem(PLAYER *player, int *turn)
     while (usingItem)
     {
         drawBox(10, 40, 210, 87);
-        drawText("usar pocao", 80 * 3, 90, 0);
+        drawText("comer mosca?", 80 * 3, 90, 0);
         drawText("sim", 80 * 3, 100, 0);
         drawText("nao", 115 * 3, 100, 0);
         drawLetter(characters[37], 78 * 3 + 35 * (selected % 2) * 3, 100);
@@ -97,7 +97,7 @@ void useItem(PLAYER *player, int *turn)
                 *turn = 0;
                 usingItem = 0;
                 drawBox(10, 40, 210, 87);
-                drawText("voce se curou com uma pocao", 35 * 3, 90, 1);
+                drawText("voce comeu uma mosca", 35 * 3, 90, 1);
                 getch();
             }
             else
@@ -127,7 +127,7 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting, int enem
     while (attacking)
     {
         drawBox(10, 40, 210, 87);
-        drawText("o que voce vai fazer", 58 * 3, 85, 0);
+        drawText("o que voce vai fazer?", 58 * 3, 85, 0);
         drawText("bater", 30 * 3, 100, 0);
         drawText("magia", 65 * 3, 100, 0);
         drawText("cegar", 100 * 3, 100, 0);
@@ -185,6 +185,7 @@ void playerTurn(PLAYER *player, ENEMY *enemy, int *turn, int *fighting, int enem
             {
                 drawBox(10, 40, 210, 87);
                 drawText("o inimigo foi derrotado", 45 * 3, 90, 1);
+                getch();
                 player->xp += (enemyType == 0) ? 50 : 100;
                 if (player->xp / 100 > player->lvl)
                 {
@@ -238,8 +239,17 @@ void fight(PLAYER *player, int enemyType, char *text, int textPos)
 
     clear();
     drawBattleInfo(player, &enemy);
-    drawSprite(&player->sprites[0], 45 * 3, 30, 0);
-    drawSprite(&assets[3], 150 * 3, 30, 1);
+    drawSprite(&player->sprites[2], 45 * 3, 30, 0);
+    if (enemyType == 2)
+    {
+        drawSprite(&assets[10], 150 * 3, 20, 0);
+        drawSprite(&assets[9], 150 * 3, 36, 0);
+    }
+    else
+    {
+
+        drawSprite(&assets[3], 150 * 3, 30, 1);
+    }
     drawBox(10, 40, 210, 87);
     drawText(text, textPos * 3, 90, 1);
     int turn = diceRoll(50);
@@ -331,6 +341,21 @@ void fight(PLAYER *player, int enemyType, char *text, int textPos)
             {
                 turn = !turn;
             }
+        }
+    }
+    if (enemyType == 2)
+    {
+        if (player->life > 0)
+        {
+            player->lvl = -2;
+        }
+        else
+        {
+            clear();
+            drawText("voce nao foi forte o bastante para", 15 * 3, 40, 0);
+            drawText("derrotar um humano, quem sabe", 15 * 3, 50, 0);
+            drawText("se treinasse mais...", 15 * 3, 60, 0);
+            getch();
         }
     }
 }

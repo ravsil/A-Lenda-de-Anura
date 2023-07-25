@@ -45,7 +45,21 @@ void drawWorld(int world[7][14])
         {
             if (world[i][j] > 20)
             {
-                index = (world[i][j] == 22) ? 0 : 2;
+                switch (world[i][j])
+                {
+                case 22:
+                    index = 0;
+                    break;
+                case 27:
+                    index = 7;
+                    break;
+                case 28:
+                    index = 8;
+                    break;
+                case 25:
+                    index = 5;
+                    break;
+                }
             }
             else
             {
@@ -194,7 +208,16 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
         clear();
         drawBattleInfo(player, enemy);
         drawSprite(&player->sprites[2], 45 * 3, 30, 0);
-        drawSprite(&assets[3], 150 * 3, 30, 1);
+        if (enemy->maxLife == 50)
+        {
+            drawSprite(&assets[10], 150 * 3, 20, 0);
+            drawSprite(&assets[9], 150 * 3, 36, 0);
+        }
+        else
+        {
+
+            drawSprite(&assets[3], 150 * 3, 30, 1);
+        }
         drawBox(10, 40, 210, 87);
         drawSprite(&assets[2], 65 * 3 + 48 * i, 30 + (miss * i * 5), 0);
         struct timespec delay;
@@ -207,12 +230,125 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
     clear();
     drawBattleInfo(player, enemy);
     drawSprite(&player->sprites[2], 45 * 3, 30, 0);
-    drawSprite(&assets[3], 150 * 3, 30, 1);
+    if (enemy->maxLife == 50)
+    {
+        drawSprite(&assets[10], 150 * 3, 20, 0);
+        drawSprite(&assets[9], 150 * 3, 36, 0);
+    }
+    else
+    {
+
+        drawSprite(&assets[3], 150 * 3, 30, 1);
+    }
 }
 
 void cutscene()
 {
     drawBox(10, 40, 210, 87);
-    drawText("usar pocao", 10 * 3, 90, 0);
+    drawText("voce acorda no meio de um pantano,", 10 * 3, 90, 1);
+    drawText("e o lugar lhe parece familiar.", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("o ar puro do lamacal te enche de", 10 * 3, 90, 1);
+    drawText("determinacao. apos um longo coaxar,", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("voce chega a conclusao que todos", 10 * 3, 90, 1);
+    drawText("os lugares deveriam ser pantanos. na", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("verdade, todos os seres deveriam ser", 10 * 3, 90, 1);
+    drawText("sapos. voce sente que assim,e somente", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("assim, o mundo se tornaria um lugar", 10 * 3, 90, 1);
+    drawText("melhor, haveria menos degradacao", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("ambiental, e mais respeito e cuidado", 10 * 3, 90, 1);
+    drawText("com a natureza... O ecofascismo lhe", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("parece uma boa alternativa!", 10 * 3, 90, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("com isso em mente, voce, ate", 10 * 3, 90, 1);
+    drawText("entao um simples sapo cururu, decide", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("dar inicio a sua jornada de", 10 * 3, 90, 1);
+    drawText("dominacao mundial. visando, e claro. a", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("aniquilacao da raca humana e de todos", 10 * 3, 90, 1);
+    drawText("os nao sapos. isso sim que e vida", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("boa...", 10 * 3, 90, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("va ate a bruxa que se encontra", 10 * 3, 90, 1);
+    drawText("na floresta, apos o lago, talvez", 10 * 3, 100, 1);
+    getch();
+    drawBox(10, 40, 210, 87);
+    drawText("ela possa te indicar um caminho.", 10 * 3, 90, 1);
+    getch();
+}
+
+int cutscene2()
+{
+    drawBox(10, 40, 210, 87);
+    drawText("ola pequena criaturinha, o que te", 10 * 3, 90, 1);
+    drawText("tras aqui?", 10 * 3, 100, 1);
+    getch();
+    int choosing = 1;
+    int selected = 0;
+    int key;
+    while (choosing)
+    {
+        drawBox(10, 40, 210, 87);
+        drawText(" me arruma algo...", 10 * 3, 90, 0);
+        drawText(" preciso de sua ajuda", 10 * 3, 100, 0);
+        drawLetter(characters[37], 14 * 3, 90 + 10 * (selected % 2));
+        key = getch();
+        switch (key)
+        {
+        case 'j':
+            choosing = 0;
+            break;
+        case 'w':
+        case 's':
+            selected = !selected;
+            break;
+        }
+    }
+    if (!selected)
+    {
+        drawBox(10, 40, 210, 87);
+        drawText("arruma um plano maligno ai pra mim", 10 * 3, 90, 1);
+        getch();
+        drawBox(10, 40, 210, 87);
+        drawText("que petulancia!", 10 * 3, 90, 1);
+        getch();
+        return 0;
+    }
+    else
+    {
+        drawBox(10, 40, 210, 87);
+        drawText("senhora bruxa, boa tarde. preciso", 10 * 3, 90, 1);
+        drawText("de ajuda para bolar um plano", 10 * 3, 100, 1);
+        getch();
+        drawBox(10, 40, 210, 87);
+        drawText("maligno contra a humanidade", 10 * 3, 90, 1);
+        getch();
+        return 1;
+    }
+}
+
+void cutscene3()
+{
+    drawBox(10, 40, 210, 87);
+    drawText("jesus, maria e jose, um sapo", 10 * 3, 90, 0);
+    drawText("magico", 10 * 3, 100, 0);
     getch();
 }

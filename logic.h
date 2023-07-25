@@ -36,6 +36,20 @@ void status(PLAYER *player)
     getch();
 }
 
+void item(PLAYER *player)
+{
+    clear();
+
+    char item[10];
+    snprintf(item, 10, "%d", player->potions);
+
+    drawText("moscas", 40 * 3, 30, 0);
+    drawText(item, 75 * 3, 30, 0);
+
+    drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 90, 0);
+    getch();
+}
+
 void save(PLAYER *player)
 {
     FILE *f;
@@ -72,7 +86,7 @@ void menu(int *isOnTitle, PLAYER *player)
             }
             else if (selected % 4 == 1)
             {
-                // item();
+                item(player);
             }
             else if (selected % 4 == 2)
             {
@@ -101,7 +115,7 @@ void seekNewPos(PLAYER *player)
     {
         for (int j = 0; j < 14; j++)
         {
-            if (screens[player->curScreen].world[i][j] == 22 || screens[player->curScreen].world[i][j] == 23)
+            if (screens[player->curScreen].world[i][j] == 22 || screens[player->curScreen].world[i][j] == 26)
             {
                 player->mapX = j + 1;
                 player->mapY = i + 1;
@@ -178,6 +192,15 @@ void distributeStats(PLAYER *player)
         player->defense = 5 + stats[2];
         player->magic = 5 + stats[3];
     }
+    clear();
+    drawText("apos receber poderes da bruxa,", 20 * 3, 40, 0);
+    drawText("voce entao partiu para sua jornada", 20 * 3, 50, 0);
+    drawText("de extincao da humanidade", 20 * 3, 60, 0);
+    getch();
+    clear();
+    drawText("quando sentir que esta pronto", 20 * 3, 40, 0);
+    drawText("aperte f", 20 * 3, 50, 0);
+    getch();
 }
 
 int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *isNotMoving, int reverse)
@@ -216,8 +239,14 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *
 
         switch (world[y - 1][x - 1])
         {
-        case 21:
-            cutscene();
+        case 27:
+        case 28:
+            int survived = cutscene2();
+            if (!survived)
+            {
+                player->lvl = -1;
+                return 0;
+            }
             distributeStats(player);
             world[y - 1][x - 1] = 0;
             switch (direction)
@@ -239,10 +268,11 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *
                 player->mapY += 1;
                 break;
             }
+            player->curScreen += 1;
             return 0;
             break;
+        case 26:
         case 22:
-        case 23:
             if (reverse)
             {
                 player->curScreen -= 1;
@@ -263,6 +293,26 @@ int canMove(int world[7][14], int x, int y, int direction, PLAYER *player, int *
     }
 }
 
+void spawn(int world[7][14])
+{
+    if (diceRoll(70))
+    {
+        return;
+    }
+    int i = rand() % 7;
+    int j = rand() % 14;
+
+    if (diceRoll(50))
+    {
+
+        world[i][j] = (world[i][j] == 0) ? 4 : world[i][j];
+    }
+    else
+    {
+        world[i][j] = (world[i][j] == 0) ? 6 : world[i][j];
+    }
+}
+
 void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER *player, int world[7][14])
 {
     int turned = 0;
@@ -270,6 +320,8 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     {
         *key = getch();
     }
+
+    spawn(world);
 
     switch (*key)
     {
@@ -332,6 +384,13 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
     case 'k':
         menu(isOnTitle, player);
         break;
+    case 'f':
+        if (player->mana > 0)
+        {
+
+            fight(player, 2, "voce encontrou um humano", 35);
+        }
+        break;
     default:
         if (*isNotMoving)
         {
@@ -344,10 +403,18 @@ void playerMove(int *key, int *reverse, int *isNotMoving, int *isOnTitle, PLAYER
         *isNotMoving = !*isNotMoving;
     }
 
-    if (world[player->mapY - 1][player->mapX - 1] == 3)
+    if (world[player->mapY - 1][player->mapX - 1] == 6)
     {
         world[player->mapY - 1][player->mapX - 1] = 0;
         player->potions += 1;
+    }
+    else if (world[player->mapY - 1][player->mapX - 1] == 4)
+    {
+        world[player->mapY - 1][player->mapX - 1] = 0;
+        player->xp += 50;
+        drawBox(10, 40, 210, 87);
+        drawText("voce salvou um girino", 10 * 3, 90, 0);
+        getch();
     }
 
     struct timespec delay;

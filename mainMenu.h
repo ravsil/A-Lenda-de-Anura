@@ -145,9 +145,8 @@ void startingScreen(PLAYER *player, int *isOnTitle)
 void credits()
 {
     clear();
-    drawText("esther mussi de castro", 40 * 3, 30, 0);
-    drawText("maria eduarda oliveira", 40 * 3, 40, 0);
-    drawText("rafael vieira da silva", 40 * 3, 50, 0);
+    drawText("maria eduarda oliveira", 40 * 3, 30, 0);
+    drawText("rafael vieira da silva", 40 * 3, 40, 0);
     drawText("pressione qualquer tecla\n     para retornar", 40 * 3, 80, 0);
     getch();
 }
