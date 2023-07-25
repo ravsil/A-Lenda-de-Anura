@@ -248,7 +248,7 @@ void fight(PLAYER *player, int enemyType, char *text, int textPos)
     else
     {
 
-        drawSprite(&assets[3], 150 * 3, 30, 1);
+        drawSprite(&assets[3], 150 * 3, 30, 0);
     }
     drawBox(10, 40, 210, 87);
     drawText(text, textPos * 3, 90, 1);

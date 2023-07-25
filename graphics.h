@@ -238,7 +238,7 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
     else
     {
 
-        drawSprite(&assets[3], 150 * 3, 30, 1);
+        drawSprite(&assets[3], 150 * 3, 30, 0);
     }
 }
 
@@ -272,19 +272,16 @@ void cutscene()
     drawText("parece uma boa alternativa!", 10 * 3, 90, 1);
     getch();
     drawBox(10, 40, 210, 87);
-    drawText("com isso em mente, voce, ate", 10 * 3, 90, 1);
-    drawText("entao um simples sapo cururu, decide", 10 * 3, 100, 1);
+    drawText("com isso em mente, voce, ate entao um", 10 * 3, 90, 1);
+    drawText("simples sapo cururu,decide dar inicio", 10 * 3, 100, 1);
     getch();
     drawBox(10, 40, 210, 87);
-    drawText("dar inicio a sua jornada de", 10 * 3, 90, 1);
-    drawText("dominacao mundial. visando, e claro. a", 10 * 3, 100, 1);
+    drawText("a sua jornada de dominacao mundial.", 10 * 3, 90, 1);
+    drawText("visando, e claro. a aniquilacao da", 10 * 3, 100, 1);
     getch();
     drawBox(10, 40, 210, 87);
-    drawText("aniquilacao da raca humana e de todos", 10 * 3, 90, 1);
-    drawText("os nao sapos. isso sim que e vida", 10 * 3, 100, 1);
-    getch();
-    drawBox(10, 40, 210, 87);
-    drawText("boa...", 10 * 3, 90, 1);
+    drawText("raca humana e de todos os nao sapos", 10 * 3, 90, 1);
+    drawText("isso sim que e vida boa...", 10 * 3, 100, 1);
     getch();
     drawBox(10, 40, 210, 87);
     drawText("va ate a bruxa que se encontra", 10 * 3, 90, 1);
@@ -299,7 +296,7 @@ int cutscene2()
 {
     drawBox(10, 40, 210, 87);
     drawText("ola pequena criaturinha, o que te", 10 * 3, 90, 1);
-    drawText("tras aqui?", 10 * 3, 100, 1);
+    drawText("traz aqui?", 10 * 3, 100, 1);
     getch();
     int choosing = 1;
     int selected = 0;
@@ -348,7 +345,7 @@ int cutscene2()
 void cutscene3()
 {
     drawBox(10, 40, 210, 87);
-    drawText("jesus, maria e jose, um sapo", 10 * 3, 90, 0);
+    drawText("jesus, maria e jose! um sapo", 10 * 3, 90, 0);
     drawText("magico", 10 * 3, 100, 0);
     getch();
 }

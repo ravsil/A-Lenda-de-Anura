@@ -302,7 +302,7 @@ void spawn(int world[7][14])
     int i = rand() % 7;
     int j = rand() % 14;
 
-    if (diceRoll(50))
+    if (rand() % 100 >= 50)
     {
 
         world[i][j] = (world[i][j] == 0) ? 4 : world[i][j];
