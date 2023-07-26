@@ -1,7 +1,7 @@
 # A-Lenda-de-Anura
 RPG terminal game made using ncurses for the TN706 - PROGRAMAÇÃO ESTRUTURADA at UFRRJ - NI
 
-# How To Play Properly
+## How To Play Properly
 For the graphics to show properly on the screen, the terminal resolution should be at least 672x112
 
 To get the intended experience, use these colors in your terminal:
