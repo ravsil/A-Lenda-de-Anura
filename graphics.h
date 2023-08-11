@@ -216,7 +216,7 @@ void magicAnimation(PLAYER *player, ENEMY *enemy, int miss)
         else
         {
 
-            drawSprite(&assets[3], 150 * 3, 30, 1);
+            drawSprite(&assets[3], 150 * 3, 30, 0);
         }
         drawBox(10, 40, 210, 87);
         drawSprite(&assets[2], 65 * 3 + 48 * i, 30 + (miss * i * 5), 0);
@@ -294,19 +294,20 @@ void cutscene()
 
 int cutscene2()
 {
-    drawBox(10, 40, 210, 87);
-    drawText("ola pequena criaturinha, o que te", 10 * 3, 90, 1);
-    drawText("traz aqui?", 10 * 3, 100, 1);
+    drawBox(1, 40, 210, 87);
+    drawSprite(&assets[11], 190 * 3, 87, 0);
+    drawText("ola pequena criaturinha, o que te", 1 * 3, 90, 1);
+    drawText("traz aqui?", 1 * 3, 100, 1);
     getch();
     int choosing = 1;
     int selected = 0;
     int key;
     while (choosing)
     {
-        drawBox(10, 40, 210, 87);
-        drawText(" me arruma algo...", 10 * 3, 90, 0);
-        drawText(" preciso de sua ajuda", 10 * 3, 100, 0);
-        drawLetter(characters[37], 14 * 3, 90 + 10 * (selected % 2));
+        drawBox(1, 40, 210, 87);
+        drawText(" me arruma algo...", 1 * 3, 90, 0);
+        drawText(" preciso de sua ajuda", 1 * 3, 100, 0);
+        drawLetter(characters[37], 5 * 3, 90 + 10 * (selected % 2));
         key = getch();
         switch (key)
         {
@@ -321,22 +322,23 @@ int cutscene2()
     }
     if (!selected)
     {
-        drawBox(10, 40, 210, 87);
-        drawText("arruma um plano maligno ai pra mim", 10 * 3, 90, 1);
+        drawBox(1, 40, 210, 87);
+        drawText("arruma um plano maligno ai pra mim", 1 * 3, 90, 1);
         getch();
-        drawBox(10, 40, 210, 87);
-        drawText("que petulancia!", 10 * 3, 90, 1);
+        drawBox(1, 40, 210, 87);
+        drawSprite(&assets[11], 190 * 3, 87, 0);
+        drawText("que petulancia!", 1 * 3, 90, 1);
         getch();
         return 0;
     }
     else
     {
-        drawBox(10, 40, 210, 87);
-        drawText("senhora bruxa, boa tarde. preciso", 10 * 3, 90, 1);
-        drawText("de ajuda para bolar um plano", 10 * 3, 100, 1);
+        drawBox(1, 40, 210, 87);
+        drawText("senhora bruxa, boa tarde. preciso", 1 * 3, 90, 1);
+        drawText("de ajuda para bolar um plano", 1 * 3, 100, 1);
         getch();
         drawBox(10, 40, 210, 87);
-        drawText("maligno contra a humanidade", 10 * 3, 90, 1);
+        drawText("maligno contra a humanidade", 1 * 3, 90, 1);
         getch();
         return 1;
     }

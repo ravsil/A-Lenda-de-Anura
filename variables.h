@@ -39,5 +39,5 @@ typedef struct _GAME_SCREEN
 
 ENEMY enemy;
 long long int characters[45];
-SPRITE assets[11];
+SPRITE assets[12];
 GAME_SCREEN screens[3];
